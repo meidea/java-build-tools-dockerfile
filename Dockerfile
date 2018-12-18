@@ -68,10 +68,12 @@ RUN [ -f "/etc/ssl/certs/java/cacerts" ] || /var/lib/dpkg/info/ca-certificates-j
 # workaround "You are using pip version 8.1.1, however version 9.0.1 is available."
 RUN pip install --upgrade pip setuptools
 
+RUN pip install yq
+
 #==========
 # Maven
 #==========
-ENV MAVEN_VERSION 3.5.4
+ENV MAVEN_VERSION 3.6.0
 
 RUN curl -fsSL http://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar xzf - -C /usr/share \
   && mv /usr/share/apache-maven-$MAVEN_VERSION /usr/share/maven \
@@ -95,8 +97,8 @@ ENV ANT_HOME /usr/share/ant
 # Selenium
 #==========
 
-ENV SELENIUM_MAJOR_VERSION 3.14
-ENV SELENIUM_VERSION 3.14.0
+ENV SELENIUM_MAJOR_VERSION 3.141
+ENV SELENIUM_VERSION 3.141.59
 RUN  mkdir -p /opt/selenium \
   && wget --no-verbose http://selenium-release.storage.googleapis.com/$SELENIUM_MAJOR_VERSION/selenium-server-standalone-$SELENIUM_VERSION.jar -O /opt/selenium/selenium-server-standalone.jar
 
@@ -133,7 +135,7 @@ RUN apt-get update -qqy \
 #=========
 # Firefox
 #=========
-ARG FIREFOX_VERSION=60.2.2esr
+ARG FIREFOX_VERSION=60.4.0esr
 
 # don't install firefox with apt-get because there are some problems,
 # install the binaries downloaded from mozilla
@@ -207,7 +209,7 @@ RUN npm install --global grunt-cli@1.3.1 bower@1.8.4 gulp@4.0.0
 # Kubernetes CLI
 # See http://kubernetes.io/v1.0/docs/getting-started-guides/aws/kubectl.html
 #====================================
-RUN curl https://storage.googleapis.com/kubernetes-release/release/v1.12.0/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl && chmod +x /usr/local/bin/kubectl
+RUN curl https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl && chmod +x /usr/local/bin/kubectl
 
 #====================================
 # OPENSHIFT V3 CLI
@@ -215,7 +217,7 @@ RUN curl https://storage.googleapis.com/kubernetes-release/release/v1.12.0/bin/l
 # See https://github.com/openshift/origin/releases
 #====================================
 RUN mkdir /var/tmp/openshift \
-      && wget -O - "https://github.com/openshift/origin/releases/download/v3.10.0/openshift-origin-client-tools-v3.10.0-dd10d17-linux-64bit.tar.gz" \
+      && wget -O - "https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz" \
       | tar -C /var/tmp/openshift --strip-components=1 -zxf - \
       && mv /var/tmp/openshift/oc /usr/local/bin \
       && rm -rf /var/tmp/openshift
