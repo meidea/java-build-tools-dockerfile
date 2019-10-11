@@ -1,5 +1,11 @@
 FROM ubuntu:16.04
-LABEL maintainer="Cyrille Le Clerc <cleclerc@cloudbees.com>"
+LABEL name="Java Build Tools" \
+      maintainer="Cyrille Le Clerc <cleclerc@cloudbees.com>" \
+      license="Apache-2.0" \
+      version="2.5.1" \
+      summary="Convenient Docker image to build Java applications." \
+      description="Convenient Docker image to build Java applications."
+
 
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -73,7 +79,7 @@ RUN pip install yq
 #==========
 # Maven
 #==========
-ENV MAVEN_VERSION 3.6.1
+ENV MAVEN_VERSION 3.6.2
 
 RUN curl -fsSL http://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar xzf - -C /usr/share \
   && mv /usr/share/apache-maven-$MAVEN_VERSION /usr/share/maven \
@@ -85,7 +91,7 @@ ENV MAVEN_HOME /usr/share/maven
 # Ant
 #==========
 
-ENV ANT_VERSION 1.10.5
+ENV ANT_VERSION 1.10.7
 
 RUN curl -fsSL https://www.apache.org/dist/ant/binaries/apache-ant-$ANT_VERSION-bin.tar.gz | tar xzf - -C /usr/share \
   && mv /usr/share/apache-ant-$ANT_VERSION /usr/share/ant \
@@ -135,7 +141,7 @@ RUN apt-get update -qqy \
 #=========
 # Firefox
 #=========
-ARG FIREFOX_VERSION=60.4.0esr
+ARG FIREFOX_VERSION=68.1.0esr
 
 # don't install firefox with apt-get because there are some problems,
 # install the binaries downloaded from mozilla
@@ -160,7 +166,7 @@ RUN dbus-uuidgen > /var/lib/dbus/machine-id
 # Firefox GECKO DRIVER
 #======================
 
-ARG GECKO_DRIVER_VERSION=v0.23.0
+ARG GECKO_DRIVER_VERSION=v0.25.0
 RUN wget -O - "https://github.com/mozilla/geckodriver/releases/download/$GECKO_DRIVER_VERSION/geckodriver-$GECKO_DRIVER_VERSION-linux64.tar.gz" \
       | tar -xz -C /usr/bin
 
@@ -182,6 +188,7 @@ RUN mkdir -p /home/jenkins/.local/bin/ \
 
 #====================================
 # NODE JS
+# See https://github.com/nodesource/distributions/blob/master/README.md
 # See https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions
 #====================================
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash \
@@ -207,9 +214,9 @@ RUN npm install --global grunt-cli@1.3.1 bower@1.8.4 gulp@4.0.0
 
 #====================================
 # Kubernetes CLI
-# See http://kubernetes.io/v1.0/docs/getting-started-guides/aws/kubectl.html
+# See https://storage.googleapis.com/kubernetes-release/release/stable.txt
 #====================================
-RUN curl https://storage.googleapis.com/kubernetes-release/release/v1.13.0/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl && chmod +x /usr/local/bin/kubectl
+RUN curl https://storage.googleapis.com/kubernetes-release/release/v1.16.1/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl && chmod +x /usr/local/bin/kubectl
 
 #====================================
 # OPENSHIFT V3 CLI
@@ -226,7 +233,7 @@ RUN mkdir /var/tmp/openshift \
 # JMETER
 #====================================
 RUN mkdir /opt/jmeter \
-      && wget -O - "https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.0.tgz" \
+      && wget -O - "https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.1.1.tgz" \
       | tar -xz --strip=1 -C /opt/jmeter
 
 #====================================
