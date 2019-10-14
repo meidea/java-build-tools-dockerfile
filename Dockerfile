@@ -2,7 +2,7 @@ FROM ubuntu:16.04
 LABEL name="Java Build Tools" \
       maintainer="Cyrille Le Clerc <cleclerc@cloudbees.com>" \
       license="Apache-2.0" \
-      version="2.5.1" \
+      version="latest" \
       summary="Convenient Docker image to build Java applications." \
       description="Convenient Docker image to build Java applications."
 
